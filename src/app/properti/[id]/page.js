@@ -76,6 +76,15 @@ export default function Page({ params }) {
       <div className="bg-white rounded-lg shadow-md p-8 flex  w-2/3 mx-auto mt-8 px-20 gap-4">
         <Calculator />
       </div>
+
+      <div className="bg-white rounded-lg shadow-md p-8 flex items-center justify-center  w-2/3 mx-auto mt-8 px-20 gap-4">
+        <iframe
+          width="800"
+          height="500"
+          allowfullscreen
+          src="https://cdn.pannellum.org/2.5/pannellum.htm#panorama=https://pannellum.org/images/alma.jpg"
+        ></iframe>
+      </div>
     </main>
   );
 }
