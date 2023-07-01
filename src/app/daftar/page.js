@@ -5,6 +5,8 @@ import React, { useState } from "react";
 export default function Daftar() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  console.log(email);
+  console.log(password);
   //
   return (
     <div style={{ paddingTop: 100, paddingBottom: 100 }}>
