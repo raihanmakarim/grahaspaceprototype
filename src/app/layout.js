@@ -11,7 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ paddingTop: "-20px", marginTop: "-20px" }}>
         <Navbar />
         {children}
         <Footer />

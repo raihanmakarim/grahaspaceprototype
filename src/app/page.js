@@ -12,6 +12,7 @@ export default function Home() {
           <Image
             src="/interior_image.jpg"
             fill={true}
+            alt="interior_image"
             loading="lazy"
             style={{
               objectFit: "cover",
@@ -24,6 +25,7 @@ export default function Home() {
             <div className="flex items-center logo-container-grey gap-3">
               <Image
                 src="/home.svg"
+                alt="home"
                 loading="lazy"
                 width={20}
                 height={20}
@@ -54,6 +56,7 @@ export default function Home() {
           <div className=" bg-cover bg-center h-full flex items-center justify-center rounded relative text-white">
             <Image
               src="/house_image1.jpg"
+              alt="house_image1"
               fill={true}
               loading="lazy"
               style={{
@@ -70,6 +73,7 @@ export default function Home() {
           <div className="bg-cover bg-center h-full flex items-center justify-center rounded relative text-white">
             <Image
               src="/house_image2.jpg"
+              alt="house_image2"
               fill={true}
               style={{
                 objectFit: "cover",
@@ -88,6 +92,7 @@ export default function Home() {
             <Image
               src="/house_image3.jpg"
               fill={true}
+              alt="house_image3"
               loading="lazy"
               style={{
                 objectFit: "cover",

@@ -6,7 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-  --primary: #73A4A1;
+  --primary: #73a4a1;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,7 +23,7 @@ ion-icon {
 
 body {
   color: var(--primary);
-  background: #F6FAFD;
+  background: #f6fafd;
   padding: 0px;
   margin: 0px;
 }
@@ -52,12 +52,11 @@ a {
   width: 375px;
   box-shadow: 0 12px 15px 0 rgba(93, 93, 93, 0.24),
     0 17px 50px 0 rgba(116, 115, 115, 0.19);
-  font: 600 16px/18px jakarta
+  font: 600 16px/18px jakarta;
 }
 .login-html {
   padding: 90px 70px 50px 70px;
   background: white;
-  
 }
 .login-html .sign-in-htm,
 .login-html .sign-up-htm {
@@ -108,7 +107,6 @@ a {
   width: 100%;
   color: white;
   display: block;
-
 }
 .login-form .group .input,
 .login-form .group .button {
@@ -126,12 +124,11 @@ a {
   font-size: 12px;
 }
 .login-form .group .button {
-    background: var(--primary);
-
+  background: var(--primary);
 }
 
 .login-form .group .button:hover {
-    background: var(--primary);
+  background: var(--primary);
 
   cursor: pointer;
 }
@@ -199,24 +196,33 @@ a {
 }
 
 .group input {
-  font-family: jakarta
+  font-family: jakarta;
 }
 
 .logo-container img {
   color: var(--primary) !important;
-  fill: var(--primary)  !important;
-  filter: invert(62%) sepia(4%) saturate(3272%) hue-rotate(127deg) brightness(106%) contrast(64%);
+  fill: var(--primary) !important;
+  filter: invert(62%) sepia(4%) saturate(3272%) hue-rotate(127deg)
+    brightness(106%) contrast(64%);
 }
 
 .logo-container-white img {
- 
-filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%) contrast(103%);}
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%)
+    contrast(103%);
+}
 
 .logo-container-grey img {
-
-filter: invert(19%) sepia(6%) saturate(419%) hue-rotate(236deg) brightness(88%) contrast(84%);}
+  filter: invert(19%) sepia(6%) saturate(419%) hue-rotate(236deg)
+    brightness(88%) contrast(84%);
+}
 
 .logo-container-light-grey img {
+  filter: invert(49%) sepia(16%) saturate(553%) hue-rotate(186deg)
+    brightness(93%) contrast(91%);
+}
 
-filter: invert(49%) sepia(16%) saturate(553%) hue-rotate(186deg) brightness(93%) contrast(91%);
+.absolute-container {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
 }

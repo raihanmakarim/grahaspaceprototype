@@ -12,34 +12,44 @@ const Navbar = () => {
     {
       name: "Cari Rumah",
       logo: "/search-outline.svg",
-      link: "/",
+      link: "/cari-rumah",
     },
 
     {
       name: "Bantuan",
       logo: "/heart-outline.svg",
-      link: "/",
+      link: "/bantuan",
     },
   ];
 
   return (
-    <div className="w-full text-primary flex justify-between items-center px-20 h-16 bg-white shadow-md translate-y-2 ">
-      <div className="flex gap-1 justify-center items-center rounded font-bold logo-container">
-        <Image
-          src="/home.svg"
-          loading="lazy"
-          width={20}
-          height={20}
-          quality={100}
-        />
-        <h1 className="text-2xl font-extrabold ">GrahaSpace</h1>
-        <div
-          className=" w-full h-full text-white flex justify-center items-center rounded font-bold px-1"
-          style={{ background: "var(--primary)" }}
-        >
-          PROTOTYPE
+    <header
+      className="w-full text-primary flex justify-between items-center px-20 h-16 bg-white shadow-md translate-y-2 "
+      style={{
+        position: "absolute",
+        top: "-15px",
+        zIndex: "100",
+      }}
+    >
+      <Link href="/">
+        <div className="flex gap-1 justify-center items-center rounded font-bold logo-container">
+          <Image
+            src="/home.svg"
+            loading="lazy"
+            alt="home"
+            width={20}
+            height={20}
+            quality={100}
+          />
+          <h1 className="text-2xl font-extrabold ">GrahaSpace</h1>
+          <div
+            className=" w-full h-full text-white flex justify-center items-center rounded font-bold px-1"
+            style={{ background: "var(--primary)" }}
+          >
+            PROTOTYPE
+          </div>
         </div>
-      </div>
+      </Link>
       <div className="flex justify-between items-center gap-8 logo-container">
         {navbarItems.map((item) => (
           <Link
@@ -53,6 +63,7 @@ const Navbar = () => {
               width={20}
               height={20}
               quality={100}
+              alt="logo"
             />
             <h1>{item.name}</h1>
           </Link>
@@ -66,6 +77,7 @@ const Navbar = () => {
               src="/person.svg"
               loading="lazy"
               width={20}
+              alt="person"
               height={20}
               quality={100}
             />
@@ -73,7 +85,7 @@ const Navbar = () => {
           </button>
         </Link>
       </div>
-    </div>
+    </header>
   );
 };
 
