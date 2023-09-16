@@ -7,6 +7,9 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
   --primary: #73a4a1;
+  --bg-primary: #1F363D;
+  --primary2: #3ADE7C;
+  --secondary: #6FBECA;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -33,15 +36,18 @@ body {
 :before {
   box-sizing: border-box;
 }
+
 .clearfix:after,
 .clearfix:before {
   content: "";
   display: table;
 }
+
 .clearfix:after {
   clear: both;
   display: block;
 }
+
 a {
   color: inherit;
   text-decoration: none;
@@ -54,10 +60,12 @@ a {
     0 17px 50px 0 rgba(116, 115, 115, 0.19);
   font: 600 16px/18px jakarta;
 }
+
 .login-html {
   padding: 90px 70px 50px 70px;
   background: white;
 }
+
 .login-html .sign-in-htm,
 .login-html .sign-up-htm {
   top: 0;
@@ -69,16 +77,19 @@ a {
   backface-visibility: hidden;
   transition: all 0.4s linear;
 }
+
 .login-html .sign-in,
 .login-html .sign-up,
 .login-form .group .check {
   display: none;
 }
+
 .login-html .tab,
 .login-form .group .label,
 .login-form .group .button {
   text-transform: uppercase;
 }
+
 .login-html .tab {
   font-size: 22px;
   margin-right: 15px;
@@ -87,20 +98,24 @@ a {
   display: inline-block;
   border-bottom: 2px solid transparent;
 }
-.login-html .sign-in:checked + .tab,
-.login-html .sign-up:checked + .tab {
+
+.login-html .sign-in:checked+.tab,
+.login-html .sign-up:checked+.tab {
   color: var(--primary);
   border-color: #ee6211;
 }
+
 .login-form {
   min-height: 345px;
   position: relative;
   perspective: 1000px;
   transform-style: preserve-3d;
 }
+
 .login-form .group {
   margin-bottom: 15px;
 }
+
 .login-form .group .label,
 .login-form .group .input,
 .login-form .group .button {
@@ -108,6 +123,7 @@ a {
   color: white;
   display: block;
 }
+
 .login-form .group .input,
 .login-form .group .button {
   border: none;
@@ -115,14 +131,17 @@ a {
   border-radius: 25px;
   background: var(--primary);
 }
+
 .login-form .group input[data-type="password"] {
   text-security: circle;
   -webkit-text-security: circle;
 }
+
 .login-form .group .label {
   color: var(--primary);
   font-size: 12px;
 }
+
 .login-form .group .button {
   background: var(--primary);
 }
@@ -141,6 +160,7 @@ a {
   display: inline-block;
   background: rgba(255, 255, 255, 0.1);
 }
+
 .login-form .group label .icon:before,
 .login-form .group label .icon:after {
   content: "";
@@ -150,39 +170,41 @@ a {
   position: absolute;
   transition: all 0.2s ease-in-out 0s;
 }
+
 .login-form .group label .icon:before {
   left: 3px;
   width: 5px;
   bottom: 6px;
   transform: scale(0) rotate(0);
 }
+
 .login-form .group label .icon:after {
   top: 6px;
   right: 0;
   transform: scale(0) rotate(0);
 }
-.login-form .group .check:checked + label {
+
+.login-form .group .check:checked+label {
   color: var(--primary);
 }
-.login-form .group .check:checked + label .icon {
+
+.login-form .group .check:checked+label .icon {
   background: #1161ee;
 }
-.login-form .group .check:checked + label .icon:before {
+
+.login-form .group .check:checked+label .icon:before {
   transform: scale(1) rotate(45deg);
 }
-.login-form .group .check:checked + label .icon:after {
+
+.login-form .group .check:checked+label .icon:after {
   transform: scale(1) rotate(-45deg);
 }
-.login-html
-  .sign-in:checked
-  + .tab
-  + .sign-up
-  + .tab
-  + .login-form
-  .sign-in-htm {
+
+.login-html .sign-in:checked+.tab+.sign-up+.tab+.login-form .sign-in-htm {
   transform: rotate(0);
 }
-.login-html .sign-up:checked + .tab + .login-form .sign-up-htm {
+
+.login-html .sign-up:checked+.tab+.login-form .sign-up-htm {
   transform: rotate(0);
 }
 
@@ -191,6 +213,7 @@ a {
   margin: 60px 0 50px 0;
   background: rgba(255, 255, 255, 0.2);
 }
+
 .foot-lnk {
   text-align: center;
 }
@@ -202,23 +225,19 @@ a {
 .logo-container img {
   color: var(--primary) !important;
   fill: var(--primary) !important;
-  filter: invert(62%) sepia(4%) saturate(3272%) hue-rotate(127deg)
-    brightness(106%) contrast(64%);
+  filter: invert(62%) sepia(4%) saturate(3272%) hue-rotate(127deg) brightness(106%) contrast(64%);
 }
 
 .logo-container-white img {
-  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%)
-    contrast(103%);
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%) contrast(103%);
 }
 
 .logo-container-grey img {
-  filter: invert(19%) sepia(6%) saturate(419%) hue-rotate(236deg)
-    brightness(88%) contrast(84%);
+  filter: invert(19%) sepia(6%) saturate(419%) hue-rotate(236deg) brightness(88%) contrast(84%);
 }
 
 .logo-container-light-grey img {
-  filter: invert(49%) sepia(16%) saturate(553%) hue-rotate(186deg)
-    brightness(93%) contrast(91%);
+  filter: invert(49%) sepia(16%) saturate(553%) hue-rotate(186deg) brightness(93%) contrast(91%);
 }
 
 .absolute-container {
@@ -258,8 +277,7 @@ a {
 .checkmark svg path {
   stroke-dasharray: 90 90;
   stroke-dashoffset: 90;
-  transition: stroke-dashoffset calc(var(--duration) / 3) linear
-    calc(var(--duration) / 3);
+  transition: stroke-dashoffset calc(var(--duration) / 3) linear calc(var(--duration) / 3);
 }
 
 .checkbox {
@@ -271,16 +289,16 @@ a {
   border: 2px solid;
 }
 
-.checkbox:checked ~ .checkmark {
+.checkbox:checked~.checkmark {
   transform: translate(1.9em);
 }
 
-.checkbox:checked ~ .checkmark svg {
+.checkbox:checked~.checkmark svg {
   background: var(--primary);
   transform: translate(-0.4em);
 }
 
-.checkbox:checked ~ .checkmark svg path {
+.checkbox:checked~.checkmark svg path {
   stroke-dashoffset: 0;
 }
 
@@ -292,4 +310,63 @@ a {
 .checker.checker:active .check-bg::before {
   transform: translateY(0) scale(0.8);
   opacity: 0.2;
+}
+
+.app-container {
+  padding: 1em 1em;
+  display: flex;
+  flex-direction: row;
+}
+
+.app-sidebar {
+  min-height: 100vh;
+  height: 100vh;
+  flex-grow: 0;
+  flex-shrink: 0;
+  min-width: 0px;
+  overflow: hidden;
+  max-width: 100vw;
+  display: flex;
+  border-right: #e9e9e9 1px solid;
+  flex-direction: row;
+  background: #ffffff;
+  box-shadow: -8px 2px 22px -7px rgba(0, 0, 0, 0.25);
+  border-radius: 10px 0px 0px 10px;
+  z-index: 2;
+  position: absolute;
+  left: 0;
+
+}
+
+.app-frame {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  height: 100vh;
+  max-height: 100%;
+  background: #ffffff;
+  box-shadow: 8px 2px 32px -2px rgba(0, 0, 0, 0.25);
+  border-radius: 0px 10px 10px 0px;
+  z-index: 1;
+}
+
+.app-sidebar .app-sidebar-content {
+  flex: 1;
+}
+
+.app-sidebar .app-sidebar-resizer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 6px;
+  justify-self: flex-end;
+  cursor: col-resize;
+  resize: horizontal;
+  background: red;
+  width: 3px;
+}
+
+.app-sidebar .app-sidebar-resizer:hover {
+  width: 5px;
+  background: red;
 }

@@ -3,6 +3,40 @@ import React, { useState, useEffect } from "react";
 import "./component.css";
 import { bungaSyariah } from "../constant";
 
+function pmt(principal, interestRate, totalMonths) {
+  // Convert annual interest rate to monthly interest rate
+  const monthlyInterestRate = interestRate / 12 / 100;
+
+  // Calculate the monthly payment using the formula for an amortizing loan
+  const numerator = principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths);
+  const denominator = Math.pow(1 + monthlyInterestRate, totalMonths) - 1;
+
+  const monthlyPayment = numerator / denominator;
+  return Math.round(monthlyPayment);
+}
+
+function calculateCumulativeInterest(principal, monthlyInterestRate, totalMonths, startPeriod, endPeriod) {
+  let cumulativeInterest = 0;
+
+  console.log("principal",principal)
+  console.log("monthlyInterestRate",monthlyInterestRate)
+  console.log("totalMonths",totalMonths)
+  console.log("startPeriod",startPeriod)
+  console.log("endPeriod",endPeriod)
+
+
+  for (let period = startPeriod; period <= endPeriod; period++) {
+    const interestPayment = principal * monthlyInterestRate;
+    cumulativeInterest += interestPayment;
+    
+    const principalPayment = pmt(principal, monthlyInterestRate, totalMonths) - interestPayment;
+    console.log("principalPayment",principalPayment)
+    principal -= principalPayment;
+  }
+
+  return cumulativeInterest * -1;
+}
+
 const Calculator = () => {
   const [hargaRumah, setHargaRumah] = useState(0);
   const [persenBunga, setPersenBunga] = useState(0);
@@ -19,6 +53,7 @@ const Calculator = () => {
   });
   const [isSyariah, setIsSyariah] = useState(false);
   const calculateSingleCicilan = (persenBunga) => (((hargaRumah * persenBunga) / 100) + hargaRumah) / (jumlahTahun * 12);
+  const calculateSubCicilan = (persenBunga,tahun) => (((hargaRumah * persenBunga) / 100) + hargaRumah) / (tahun * 12);
 
   const calculateCicilan = () => {
     const newJumlahBulan = jumlahTahun * 12;
@@ -52,10 +87,22 @@ const Calculator = () => {
     }
 
     if (jumlahTahun > 5 && jumlahTahun <= 20) {
+      const pmt13 = pmt(hargaRumah, 4.25, jumlahTahun*12);
+
+      const cumi = -calculateCumulativeInterest(hargaRumah, 4.25 / 12 / 100, jumlahTahun*12, 1, 35);
+      const reduc = (pmt13*36)-cumi;
+      const pmt45 = pmt( hargaRumah-reduc , 7.55, jumlahTahun*12 - 36);
+      const cumi620 = -calculateCumulativeInterest(hargaRumah, 7.55 / 12 / 100, jumlahTahun*12, 36, 60);
+      const reduc620 = (pmt*60)-cumi620;
+      const sisaPokok45 = hargaRumah-reduc;
+      const sisaPokok620 = sisaPokok45;
+      console.log("reduc",reduc);
+      console.log("cumi",cumi);
+      console.log("hkjajks",hargaRumah-reduc)
       setJumlahCicilan620({
-        tahun1_3: calculateSingleCicilan(4.25),
-        tahun4_5: calculateSingleCicilan(7.55),
-        tahun6_20: calculateSingleCicilan(9.55),
+        tahun1_3: pmt13,
+        tahun4_5: pmt45,
+        tahun6_20: pmt(hargaRumah-reduc , 9.55, jumlahTahun*12 - 60),
       });
     }
   };
@@ -68,6 +115,8 @@ const Calculator = () => {
       calculateCicilanKonvensional();
     }
   }, [jumlahTahun, isSyariah, bungaSyariah, persenBunga, hargaRumah]);
+
+  
 
 
 
@@ -111,6 +160,8 @@ const Calculator = () => {
   //   },
   // ];
 
+
+
   return (
     <div className="container mx-auto p-8">
       <h2 className="text-2xl font-semibold mb-4">
@@ -141,7 +192,7 @@ const Calculator = () => {
               className="w-full border-gray-300 rounded-lg p-2 mt-4 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               style={{ border: "1px solid #ccc" }}
               value={persenBunga}
-              onChange={(e) => setPersenBunga(parseFloat(e.target.value))}
+              onChange={(e) => hargaRumah> 0 && setHargaRumah(hargaRumah - parseFloat(e.target.value))}
             />
           </div>
           <div>

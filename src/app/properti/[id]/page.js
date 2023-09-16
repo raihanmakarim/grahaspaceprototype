@@ -4,68 +4,142 @@ import Image from "next/image";
 import Calculator from "../../component/Calculator";
 import MapScreen from "@/app/component/Map";
 import boundaryBox from "../../helper/boundaryBox";
-
+import {
+  isoChrone,stationTransit,halteTransit 
+} from "@/app/constant";
+import PolygonCheck from "@/app/helper/pointsCheck";
 const MAPBOX_API_KEY = process.env.NEXT_PUBLIC_MAPBOX_API_KEY;
 
+function convertCoordinatesToFormat(response) {
+  const coordinatesArray = response.features[0].geometry.coordinates;
+  const formattedCoordinates = coordinatesArray.flatMap(pair => pair.map(coord => `${coord[0]}%2C${coord[1]}`));
+  const formattedString = formattedCoordinates.join('%2C');
 
-const getNearbyPlaces = async (longitude, latitude, types, bbox, limit) => {
+  return formattedString;
+}
+
+const getNearbyPlaces = async (longitude, latitude, types, limit) => {
   const API_KEY = MAPBOX_API_KEY;
   const baseUrl = "https://api.mapbox.com/geocoding/v5/mapbox.places";
   const endpoint = `${baseUrl}/${types.join(",")}.json`;
-  // const response = await fetch(
-  //   `${endpoint}?bbox=${bbox.join(
-  //     "%2C"
-  //   )}&limit=${limit}&proximity=${longitude}%2C${latitude}&access_token=${API_KEY}`
-  // );
+  
   const response = await fetch(
     `${endpoint}?limit=${limit}&proximity=${longitude}%2C${latitude}&access_token=${API_KEY}`
   );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return data.features;
+};
+
+const getIsoChrone = async (longitude, latitude, minutes,type) => {
+  const API_KEY = MAPBOX_API_KEY;
+  const baseUrl = "https://api.mapbox.com/isochrone/v1/mapbox";
+  const endpoint = `${baseUrl}/${type}/${longitude}%2C${latitude}?contours_minutes=${minutes}&generalize=100&polygons=true&denoise=1&access_token=${API_KEY}`;
+  const response = await fetch(endpoint);
+
   const data = await response.json();
   if (!response.ok) {
     throw new Error("Failed to fetch data");
   }
-  return data.features;
+  return data;
+}
+
+const getDirection = async (origin, destination, type) => {
+  const [longitude, latitude] = origin;
+  const [longitudeDest, latitudeDest] = destination;
+  const API_KEY = MAPBOX_API_KEY;
+  const baseUrl = "https://api.mapbox.com/directions/v5/mapbox";
+  const queryParameters = new URLSearchParams({
+    alternatives: false,
+    annotations: "duration",
+    geometries: "geojson",
+    language: "en",
+    overview: "full",
+    steps: false,
+    access_token: API_KEY,
+  });
+  const endpoint = `${baseUrl}/${type}/${longitude},${latitude};${longitudeDest},${latitudeDest}?${queryParameters}`;
+
+  try {
+    const response = await fetch(endpoint);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to fetch data");
+    }
+
+    return response.json();
+  }
+  catch (error) {
+   
+    throw new Error("An error occurred while processing API data");
+    
+  }
 };
 
-export default function Page({ params }) {
-  console.log("asdads", params);
-  const [score, setScore] = useState(0); 
-  const [coord , setCoord] = useState({ latitude: -6.1753924, longitude: 106.8271528 }); 
-  const marketTypes = ["convenience_store", "supermarket", "grocery"];
-  const busTypes = ["bus station"];
-  const MRTTypes = ["MRT"];
-  const trainTypes = ["train station"];
 
+
+
+const bbox = convertCoordinatesToFormat(isoChrone);
+
+export default function Page({ params }) {
+
+  const [score, setScore] = useState(0); 
+  const [marketData, setMarketData] = useState([]);
+  const [coord , setCoord] = useState({ latitude: -6.29994, longitude:  106.921309 }); 
+  const marketTypes = ["alfamart"];
+  const busTypes = ["bus station"];
+  const MRTTypes = ["stasiun mrt"];
+  const tollTypes = ["toll booth"];
+  const diningTypes = ["restaurant"];
+  const schoolTypes = ["school"];
+  const worshipTypes = ["place of worship"];
+  const halteTypes = ["halte"];
+  const trainTypes = ["stasiun"];
+  const[isoChroneLayer,setIsoChroneLayer] = useState(null);
+  const [trainData, setTrainData] = useState([]);
+  const [routeData, setRouteData] = useState(null);
+  const [tollData, setTollData] = useState([]);
+  const [halteData, setHalteData] = useState([]);
+  const [MRTData, setMRTData] = useState([]);
+  const [stationTransitData, setStationTransitData] = useState([]);
+  const [halteTransitData, setHalteTransitData] = useState([]);
   
  
   useEffect(() => {
     const calculateScore = async () => {
       try {
-        const bbox5km = boundaryBox(coord.longitude, coord.latitude, 5);
-        const bbox10km = boundaryBox(coord.longitude, coord.latitude, 10);
+       
+        // const isoChrone15 = await getIsoChrone(coord.longitude,coord.latitude,15,"driving-traffic");
+        const isoChrone10 = await getIsoChrone(coord.longitude,coord.latitude,10,"driving-traffic");
+        const coordArray = [coord.longitude,coord.latitude]
+        // const isoChroneWalking = await getIsoChrone(coord.longitude,coord.latitude,15,"walking");
+        // const isoChroneCycling = await getIsoChrone(coord.longitude,coord.latitude,15,"cycling");
 
-        const marketData = await getNearbyPlaces(
-          coord.longitude,
-          coord.latitude,
-          marketTypes,
-          // bbox5km,
-          5
-        );
 
         const MRTData = await getNearbyPlaces(
           coord.longitude,
           coord.latitude,
-     
           MRTTypes,
-          // bbox5km,
           5
         );
 
-        const busData = await getNearbyPlaces(
+        const tollData = await getNearbyPlaces(
           coord.longitude,
           coord.latitude,
-          busTypes,
-          // bbox5km,
+          tollTypes,
+          5
+        );
+
+        const HalteData = await getNearbyPlaces(
+          coord.longitude,
+          coord.latitude,
+          halteTypes,
           5
         );
 
@@ -73,31 +147,146 @@ export default function Page({ params }) {
           coord.longitude,
           coord.latitude,
           trainTypes,
-          // bbox5km,
           5
         );
-        const totalOptions =
-          (MRTData.length > 0 ? 4 : 0) +
-          (busData.length > 0 ? 1 : 0) +
-          (trainData.length > 0 ? 1 : 0);
+
+        
+
+        
+        let optionCount = 0;
+        let transitCount = 0;
 
 
+        const MRTValid = MRTData.length > 0 && PolygonCheck(isoChrone10.features[0].geometry.coordinates[0],MRTData )
+        
+        const tollValid = PolygonCheck(isoChrone10.features[0].geometry.coordinates[0],tollData )
+        const halteValid = PolygonCheck(isoChrone10.features[0].geometry.coordinates[0],HalteData )
+        const trainValid = PolygonCheck(isoChrone10.features[0].geometry.coordinates[0],trainData )
+        const halteTransitValid = PolygonCheck(isoChrone10.features[0].geometry.coordinates[0],halteTransit )
+        const stationTransitValid = PolygonCheck(isoChrone10.features[0].geometry.coordinates[0],stationTransit )
 
-        if (totalOptions === 0) {
-          setScore(0);
+
+        // tier 4 transpotation score
+        const halteTransitTrue = halteTransitValid.length > 0;
+        const stationTransitTrue = stationTransitValid.length > 0;
+        const tollTrue = tollValid.length > 0;
+
+        
+
+        if (halteTransitTrue){
+          transitCount= transitCount + 1
         }
-        else if (totalOptions === 1) {
-          setScore(25);
+
+        if (stationTransitTrue){
+          transitCount= transitCount + 1
         }
-        else if (totalOptions === 2) {
-          setScore(50);
+
+        if (tollTrue){
+          transitCount= transitCount + 1
         }
-        else if (totalOptions === 3) {
-          setScore(70);
+
+       
+
+        if(transitCount === 2 ){
+          if(tollTrue){
+            setScore(86)
+          }
+          else{
+            setScore(83)
+          }
         }
-        else if (totalOptions >= 4) {
-          setScore(90);
+
+        if(transitCount === 3 ){
+          setScore(89)
         }
+
+        if(transitCount === 1 ){
+          setScore(77)
+        }
+        
+        if (halteValid.length > 0) {
+          optionCount+1
+        }
+        if (tollValid.length > 0) {
+          optionCount+1
+        }
+        if (trainValid.length > 0) {
+          optionCount+1
+        }
+
+        
+
+
+        let countScore = 0;
+        let tollMin = 0;
+        let halteMin = 0;
+        let trainMin = 0;
+
+      
+
+
+        if (tollValid.length > 0) {
+          const tollDirection = getDirection(coordArray,tollValid[0].center,"driving-traffic").then(directionData => {
+            const route = directionData.routes[0];
+            const duration = route.duration;
+            tollMin = duration;
+          }).catch(error => {
+            console.error(error);
+          }
+          );
+
+        }
+
+        if(halteValid.length > 0) {
+          const halteDirection = getDirection(coordArray,halteValid[0].center,"driving-traffic").then(directionData => {
+            const route = directionData.routes[0];
+            const duration = route.duration;
+            halteMin = duration;
+          }
+          ).catch(error => {
+            console.error(error);
+          }
+          );
+        }
+
+        if(trainValid.length > 0) {
+          const trainDirection = getDirection(coordArray,trainValid[0].center,"driving-traffic").then(directionData => {
+            const route = directionData.routes[0];
+            const duration = route.duration;
+            trainMin = duration;
+
+          }
+          ).catch(error => {
+            console.error(error);
+          }
+          );
+        }
+          
+
+        //mrtroute
+        if (MRTValid.length > 0) {
+          const MRTDirection = getDirection(coordArray,MRTValid[0].center,"driving-traffic").then(directionData => {
+            const route = directionData.routes[0];
+            const duration = route.duration;
+            setScore(Math.round(((600-duration)/600)*10)+90)
+            setRouteData(route)
+          })
+            .catch(error => {
+              console.error(error);
+            });
+          console.log("MRTDirection",MRTDirection)
+        }
+        
+
+
+        setTrainData(trainValid)
+        setMRTData(MRTValid)
+        setTollData(tollValid)
+        setHalteData(halteValid)
+        setHalteTransitData(halteTransitValid)
+        setStationTransitData(stationTransitValid)
+        setIsoChroneLayer(isoChrone10)
+
       }
       catch (error) {
         console.error("Error calculating score:", error);
@@ -106,6 +295,12 @@ export default function Page({ params }) {
 
     calculateScore();
   }, [coord]);
+
+
+  
+
+
+
   return (
     <main className=" mx-auto py-12 ">
       <div className="relative bg-gray-900  w-full  mt-4">
@@ -172,8 +367,9 @@ export default function Page({ params }) {
           <h1 className="text-2xl font-bold mb-2">Sasana Boxing</h1>
         </div> */}
 
-        <MapScreen coord={{ latitude: -6.1753924, longitude: 106.8271528 }} />
+        <MapScreen coord={coord} setCoord={setCoord} markerArray={marketData} polygon={isoChroneLayer} MRTPoints={MRTData} trainPoints={trainData} haltePoints={halteData} tollPoints={tollData} halteTransitPoints={halteTransitData} stationTransitPoints={stationTransitData}/>
         <h2>Scoring: {score}</h2>
+
 
       </div>
       <div className="bg-white rounded-lg shadow-md p-8 flex  w-2/3 mx-auto mt-8 px-20 gap-4">

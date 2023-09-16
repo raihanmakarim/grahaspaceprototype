@@ -20,6 +20,11 @@ const Navbar = () => {
       logo: "/heart-outline.svg",
       link: "/bantuan",
     },
+    {
+      name: "homemap",
+      logo: "/heart-outline.svg",
+      link: "/homemap",
+    },
   ];
 
   return (
